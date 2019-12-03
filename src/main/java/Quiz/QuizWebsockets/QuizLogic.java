@@ -19,14 +19,4 @@ public class QuizLogic {
 
         return false;
     }
-
-    public volatile boolean gameinprogress;
-
-    public void setGameinprogress(boolean gameinprogress) {
-        this.gameinprogress = gameinprogress;
-    }
-
-    public boolean isGameinprogress() {
-        return gameinprogress;
-    }
 }
