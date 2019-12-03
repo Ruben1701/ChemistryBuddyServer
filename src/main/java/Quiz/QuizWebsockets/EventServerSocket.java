@@ -90,7 +90,6 @@ public class EventServerSocket {
                 round.setSession3Awnser(new Answer(session, message, CurrentQuestion, true));
             } else {
                 round.setSession3Awnser(new Answer(session, message, CurrentQuestion, false));
-
             }
 
         } else if (session.equals(quiz.getSession4())) {
