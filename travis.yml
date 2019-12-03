@@ -1,0 +1,12 @@
+language: java
+sudo: false
+
+addons:
+  sonarcloud:
+    organization: "ruben170"
+    token:
+      secure: "1490aaf1dd654bdcc3edeaf81faf9f1a9f36de6e" # encrypted value of your token
+      
+script: 
+- mvn clean verify
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=Ruben170_Chemistry-Buddy-Server
