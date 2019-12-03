@@ -82,7 +82,6 @@ public class EventServerSocket {
                 round.setSession2Awnser(new Answer(session, message, CurrentQuestion, true));
             } else {
                 round.setSession2Awnser(new Answer(session, message, CurrentQuestion, false));
-
             }
         } else if (session.equals(quiz.getSession3())) {
             System.out.println("3");
