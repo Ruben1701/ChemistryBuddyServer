@@ -16,17 +16,11 @@ public class EventServerSocket {
     public static Question CurrentQuestion;
     public static int Round;
 
-    public Quiz currentQuiz;
-
-
-    EventServer eventServer = new EventServer();
-
     @OnOpen
     public void onConnect(Session session) {
         boolean roomAvailable = false;
         System.out.println("[Connected] Succesfully connected session:" + session.getId());
         sessions.add(session);
-        //system.out.println("[sessions] number of sessions:" + sessions.size());
         Iterator quizIterator = quizes.iterator();
 
         while(quizIterator.hasNext()) {
@@ -37,7 +31,6 @@ public class EventServerSocket {
 
                 if (quiz.roomFull()){
                     this.broadcast(session.getId(), quiz, "Quiz");
-                    //quiz.addSessionsToList();
                 }
                 break;
             }
@@ -119,33 +112,6 @@ public class EventServerSocket {
         }
 
     }
-
-
-
-
-//        if (message.equals("quiz")) {
-//            try {
-//
-//                eventServer.sendMessage(CurrentQuestion.QuestionText, session);
-//                questionCount++;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        else if (message.equals(CurrentQuestion.Answer)) {
-//            eventServer.sendMessage("Correct", session);
-//            if (questionCount < 2) {
-//                CurrentQuestion = quizLogic.getRandomQuestion();
-//                eventServer.sendMessage(CurrentQuestion.QuestionText, session);
-//                questionCount++;
-//            }
-//        }
-//        else {
-//            eventServer.sendMessage("Wrong", session);
-//
-//        }
-
-
 
     @OnClose
     public void onClose(CloseReason reason, Session session) {
