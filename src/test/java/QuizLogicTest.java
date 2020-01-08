@@ -1,5 +1,5 @@
-import Quiz.Questions.Question;
-import Quiz.QuizWebsockets.QuizLogic;
+import quiz.server.logic.QuizLogic;
+import quiz.websocket.questions.Question;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ public class QuizLogicTest {
 
         var receivedQuestion = tester.getRandomQuestion();
 
-        assertTrue(receivedQuestion instanceof Question);
+        assertTrue(receivedQuestion != null);
     }
 
     @Test

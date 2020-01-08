@@ -1,7 +1,6 @@
-import Quiz.Questions.Question;
-import Quiz.QuizWebsockets.Answer;
-import Quiz.QuizWebsockets.QuizLogic;
-import Quiz.QuizWebsockets.Round;
+import quiz.websocket.questions.Question;
+import quiz.websocket.quizwebsockets.Answer;
+import quiz.websocket.quizwebsockets.Round;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +23,7 @@ public class RoundTest {
     public void getsetAnswerSession1(){
         Session testSession = null;
         Question testQuestion = null;
-        Answer testAnswer = new Answer(testSession,"Test",testQuestion,true);
+        Answer testAnswer = new Answer(null,"Test", null,true);
 
         tester.setSession1Awnser(testAnswer);
 
@@ -35,7 +34,7 @@ public class RoundTest {
     public void getsetAnswerSession2(){
         Session testSession = null;
         Question testQuestion = null;
-        Answer testAnswer = new Answer(testSession,"Test",testQuestion,true);
+        Answer testAnswer = new Answer(null,"Test", null,true);
 
         tester.setSession2Awnser(testAnswer);
 
@@ -46,7 +45,7 @@ public class RoundTest {
     public void getsetAnswerSession3(){
         Session testSession = null;
         Question testQuestion = null;
-        Answer testAnswer = new Answer(testSession,"Test",testQuestion,true);
+        Answer testAnswer = new Answer(null,"Test", null,true);
 
         tester.setSession3Awnser(testAnswer);
 
@@ -57,7 +56,7 @@ public class RoundTest {
     public void getsetAnswerSession4(){
         Session testSession = null;
         Question testQuestion = null;
-        Answer testAnswer = new Answer(testSession,"Test",testQuestion,true);
+        Answer testAnswer = new Answer(null,"Test", null,true);
 
         tester.setSession4Awnser(testAnswer);
 
@@ -68,7 +67,7 @@ public class RoundTest {
     public void getsetAnswerSession5(){
         Session testSession = null;
         Question testQuestion = null;
-        Answer testAnswer = new Answer(testSession,"Test",testQuestion,true);
+        Answer testAnswer = new Answer(null,"Test", null,true);
 
         tester.setSession5Awnser(testAnswer);
 
@@ -81,7 +80,7 @@ public class RoundTest {
     public void questionAnsweredTrue() {
         Session testSession = null;
         Question testQuestion = null;
-        Answer testAnswer = new Answer(testSession,"Test",testQuestion,true);
+        Answer testAnswer = new Answer(null,"Test", null,true);
         tester.setSession1Awnser(testAnswer);
         tester.setSession2Awnser(testAnswer);
         tester.setSession3Awnser(testAnswer);
