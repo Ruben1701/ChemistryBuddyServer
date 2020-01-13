@@ -6,6 +6,7 @@ addons:
     organization: "ruben170"
     token:
       secure: "1490aaf1dd654bdcc3edeaf81faf9f1a9f36de6e" # encrypted value of your token
-      
+
+      #test
 script:
 - mvn -DskipTests=true clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=Ruben170_Chemistry-Buddy-Server
