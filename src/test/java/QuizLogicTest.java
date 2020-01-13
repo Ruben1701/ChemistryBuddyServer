@@ -1,5 +1,5 @@
 import quiz.server.logic.QuizLogic;
-import quiz.websocket.questions.Question;
+import quiz.server.model.Question;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

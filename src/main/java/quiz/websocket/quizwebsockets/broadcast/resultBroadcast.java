@@ -2,7 +2,6 @@ package quiz.websocket.quizwebsockets.broadcast;
 
 import quiz.ServerLogger;
 import quiz.server.model.Player;
-import quiz.server.model.Question;
 import quiz.server.model.Quiz;
 import quiz.websocket.quizwebsockets.interfaces.iBroadcast;
 
@@ -12,8 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class questionBroadcast implements iBroadcast {
-
+public class resultBroadcast implements iBroadcast {
     @Override
     public void broadcast(String s, Quiz quiz) {
         //Logger
@@ -26,16 +24,13 @@ public class questionBroadcast implements iBroadcast {
         //Round round = new Round();
         log.log(Level.INFO,"[Broadcast] { " + s + " } to:");
 
-        Question currentQuestion = quiz.getCurrentQuestion();
-
         try {
             for ( Player player : quiz.getPlayers()) {
-                quiz.getSession(player).getBasicRemote().sendText(currentQuestion.QuestionText);
+                quiz.getSession(player).getBasicRemote().sendText(player.getAnswer().getCorrect().toString());
             }
         } catch (IOException e) {
             log.log(Level.SEVERE, (Supplier<String>) e);
         }
         log.log(Level.INFO, "[End of Broadcast]");
     }
-
 }

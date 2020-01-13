@@ -1,4 +1,4 @@
-package quiz.websocket.quizwebsockets.broadcast;
+package quiz.websocket.quizwebsockets.interfaces;
 
 import quiz.server.model.Quiz;
 

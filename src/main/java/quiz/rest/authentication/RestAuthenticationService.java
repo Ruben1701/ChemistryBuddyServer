@@ -6,7 +6,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 import quiz.rest.achievement.ChemistryBuddyAchievementRESTService;
-import quiz.rest.authentication.ChemistryBuddyLoginRESTService;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -30,7 +29,7 @@ public class RestAuthenticationService {
         ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/*");
         jerseyServlet.setInitOrder(0);
         jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
-                ChemistryBuddyAchievementRESTService.class.getCanonicalName());
+                ChemistryBuddyLoginRESTService.class.getCanonicalName());
         try {
             jettyServer.start();
             log.log(Level.INFO, "RestAuthenticationService running :)");

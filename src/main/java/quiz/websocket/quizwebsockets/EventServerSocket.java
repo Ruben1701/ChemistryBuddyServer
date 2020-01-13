@@ -1,18 +1,14 @@
 package quiz.websocket.quizwebsockets;
 
-import quiz.server.QuizRoomManager;
-import quiz.server.logic.QuizLogic;
+import quiz.server.logic.QuizRoomManager;
 import quiz.server.model.Quiz;
-import quiz.websocket.questions.Question;
+import quiz.server.model.Question;
 import quiz.ServerLogger;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -21,7 +17,7 @@ import java.util.logging.Logger;
 @ServerEndpoint(value = "/ChemistryBuddy/Quiz/")
 public class EventServerSocket {
     static HashSet<Session> sessions = new HashSet<>();
-    static ArrayList<Quiz> quizes = new ArrayList();
+    public static ArrayList<Quiz> quizes = new ArrayList();
     public static Question CurrentQuestion;
     public static int Round;
     public static boolean roomAvailable;
@@ -72,84 +68,88 @@ public class EventServerSocket {
         Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
         log.log(Level.INFO, "[Session ID] : " + session.getId() + " [Received] : " + message);
-        Round round = new Round();
-        Quiz quiz = null;
 
-        for (Quiz allquiz : quizes) {
-            if (allquiz.isPlayerHere(session)) {
-                quiz = allquiz;
-            }
-        }
+        OnMessageManager onMessageManager = new OnMessageManager();
 
-        if (session.equals(Objects.requireNonNull(quiz).getSession1())) {
-            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 1 answered");
-            if (message.equals(CurrentQuestion.Answer)) {
-                round.setSession1Awnser(new Answer(session, message, CurrentQuestion, true));
-                quiz.setPoints(session, round);
-            } else {
-                round.setSession1Awnser(new Answer(session, message, CurrentQuestion, false));
+        onMessageManager.convertMessagetoAnswer(session, message);
+//        quiz.server.model.Round round = new Round();
+//        Quiz quiz = null;
+//
+//        for (Quiz allquiz : quizes) {
+//            if (allquiz.isPlayerHere(session)) {
+//                quiz = allquiz;
+//            }
+//        }
 
-            }
-        } else if (session.equals(quiz.getSession2())) {
-            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 2 answered");
-            if (message.equals(CurrentQuestion.Answer)) {
-                round.setSession2Awnser(new Answer(session, message, CurrentQuestion, true));
-                quiz.setPoints(session, round);
-            } else {
-                round.setSession2Awnser(new Answer(session, message, CurrentQuestion, false));
-            }
-        } else if (session.equals(quiz.getSession3())) {
-            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 3 answered");
-            if (message.equals(CurrentQuestion.Answer)) {
-                round.setSession3Awnser(new Answer(session, message, CurrentQuestion, true));
-                quiz.setPoints(session, round);
-            } else {
-                round.setSession3Awnser(new Answer(session, message, CurrentQuestion, false));
-            }
-
-        } else if (session.equals(quiz.getSession4())) {
-            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 4 answered");
-            if (message.equals(CurrentQuestion.Answer)) {
-                round.setSession4Awnser(new Answer(session, message, CurrentQuestion, true));
-                quiz.setPoints(session, round);
-            } else {
-                round.setSession4Awnser(new Answer(session, message, CurrentQuestion, false));
-
-            }
-        } else {
-            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 5 answered");
-            if (message.equals(CurrentQuestion.Answer)) {
-                round.setSession5Awnser(new Answer(session, message, CurrentQuestion, true));
-                quiz.setPoints(session, round);
-            } else {
-                round.setSession5Awnser(new Answer(session, message, CurrentQuestion, false));
-
-            }
-        }
-
-        if (round.questionAnswered()) {
-            Round++;
-            if (Round < 3){
-                broadcast("Results", quiz, "EndRound");
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                round.setAllAwnsersnull();
-                broadcast("Question", quiz, "quiz");
-
-            }
-            else{
-                broadcast("Results", quiz, "EndRound");
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                broadcast("End of quiz", quiz, "EndQuiz");
-            }
-        }
+//        if (session.equals(Objects.requireNonNull(quiz).getSession1())) {
+//            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 1 answered");
+//            if (message.equals(CurrentQuestion.Answer)) {
+//                round.setSession1Awnser(new Answer(session, message, CurrentQuestion, true));
+//                quiz.setPoints(session, round);
+//            } else {
+//                round.setSession1Awnser(new Answer(session, message, CurrentQuestion, false));
+//
+//            }
+//        } else if (session.equals(quiz.getSession2())) {
+//            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 2 answered");
+//            if (message.equals(CurrentQuestion.Answer)) {
+//                round.setSession2Awnser(new Answer(session, message, CurrentQuestion, true));
+//                quiz.setPoints(session, round);
+//            } else {
+//                round.setSession2Awnser(new Answer(session, message, CurrentQuestion, false));
+//            }
+//        } else if (session.equals(quiz.getSession3())) {
+//            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 3 answered");
+//            if (message.equals(CurrentQuestion.Answer)) {
+//                round.setSession3Awnser(new Answer(session, message, CurrentQuestion, true));
+//                quiz.setPoints(session, round);
+//            } else {
+//                round.setSession3Awnser(new Answer(session, message, CurrentQuestion, false));
+//            }
+//
+//        } else if (session.equals(quiz.getSession4())) {
+//            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 4 answered");
+//            if (message.equals(CurrentQuestion.Answer)) {
+//                round.setSession4Awnser(new Answer(session, message, CurrentQuestion, true));
+//                quiz.setPoints(session, round);
+//            } else {
+//                round.setSession4Awnser(new Answer(session, message, CurrentQuestion, false));
+//
+//            }
+//        } else {
+//            log.log(Level.INFO, "[Session ID] : " + session.getId() + " 5 answered");
+//            if (message.equals(CurrentQuestion.Answer)) {
+//                round.setSession5Awnser(new Answer(session, message, CurrentQuestion, true));
+//                quiz.setPoints(session, round);
+//            } else {
+//                round.setSession5Awnser(new Answer(session, message, CurrentQuestion, false));
+//
+//            }
+//        }
+//
+//        if (round.questionAnswered()) {
+//            Round++;
+//            if (Round < 3){
+//                broadcast("Results", quiz, "EndRound");
+//                try {
+//                    TimeUnit.SECONDS.sleep(5);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                round.setAllAwnsersnull();
+//                broadcast("Question", quiz, "quiz");
+//
+//            }
+//            else{
+//                broadcast("Results", quiz, "EndRound");
+//                try {
+//                    TimeUnit.SECONDS.sleep(5);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                broadcast("End of quiz", quiz, "EndQuiz");
+//            }
+//        }
     }
 
     @OnClose
@@ -157,7 +157,7 @@ public class EventServerSocket {
         LogManager lgmngr = LogManager.getLogManager();
         Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-        log.log(Level.WARNING,"[Session ID] : " + session.getId() + "[Socket Closed: " + reason);
+        log.log(Level.WARNING, "[Session ID] : " + session.getId() + "[Socket Closed: " + reason);
         sessions.remove(session);
     }
 
@@ -184,54 +184,54 @@ public class EventServerSocket {
         LogManager lgmngr = LogManager.getLogManager();
         Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-        Round round = new Round();
-        log.log(Level.INFO,"[Broadcast] { " + s + " } to:");
-            try {
-                //for (Session session : quiz.getAllSessions())
-                //session.getBasicRemote().sendText("Test");
-                switch (broadcastType) {
-                    case "quiz":
-                        QuizLogic quizLogic = new QuizLogic();
-                        CurrentQuestion = quizLogic.getRandomQuestion();
-
-                        quiz.getSession1().getBasicRemote().sendText(CurrentQuestion.QuestionText);
-                        quiz.getSession2().getBasicRemote().sendText(CurrentQuestion.QuestionText);
-                        quiz.getSession3().getBasicRemote().sendText(CurrentQuestion.QuestionText);
-                        quiz.getSession4().getBasicRemote().sendText(CurrentQuestion.QuestionText);
-                        quiz.getSession5().getBasicRemote().sendText(CurrentQuestion.QuestionText);
-                        break;
-                    case "EndRound":
-                        quiz.getSession1().getBasicRemote().sendText(round.getSession1Awnser().getCorrect().toString() + ":" + quiz.getSession1points());
-                        quiz.getSession2().getBasicRemote().sendText(round.getSession2Awnser().getCorrect().toString() + ":" + quiz.getSession2points());
-                        quiz.getSession3().getBasicRemote().sendText(round.getSession3Awnser().getCorrect().toString() + ":" + quiz.getSession3points());
-                        quiz.getSession4().getBasicRemote().sendText(round.getSession4Awnser().getCorrect().toString() + ":" + quiz.getSession4points());
-                        quiz.getSession5().getBasicRemote().sendText(round.getSession5Awnser().getCorrect().toString() + ":" + quiz.getSession5points());
-                        break;
-                    case "EndQuiz":
-                        quiz.getSession1().getBasicRemote().sendText("End of quiz");
-                        quiz.getSession2().getBasicRemote().sendText("End of quiz");
-                        quiz.getSession3().getBasicRemote().sendText("End of quiz");
-                        quiz.getSession4().getBasicRemote().sendText("End of quiz");
-                        quiz.getSession5().getBasicRemote().sendText("End of quiz");
-                        break;
-                    case "roomjoined":
-                        if (quiz.getSession1() != null) {
-                            quiz.getSession1().getBasicRemote().sendText("Joined quiz room waiting on more players");
-                        }
-                        if (quiz.getSession2() != null){
-                            quiz.getSession2().getBasicRemote().sendText("Joined quiz room waiting on more players");
-                        }
-                        if (quiz.getSession3() != null) {
-                            quiz.getSession3().getBasicRemote().sendText("Joined quiz room waiting on more players");
-                        }
-                        if (quiz.getSession4() != null){
-                            quiz.getSession4().getBasicRemote().sendText("Joined quiz room waiting on more players");
-                        }
-                        break;
-                }
-            } catch (IOException e) {
-                log.log(Level.SEVERE, (Supplier<String>) e);
-            }
-        log.log(Level.INFO, "[End of Broadcast]");
+        //Round round = new Round();
+        log.log(Level.INFO, "[Broadcast] { " + s + " } to:");
+        //try {
+            //for (Session session : quiz.getAllSessions())
+            //session.getBasicRemote().sendText("Test");
+//                switch (broadcastType) {
+//                    case "quiz":
+//                        QuizLogic quizLogic = new QuizLogic();
+//                        CurrentQuestion = quizLogic.getRandomQuestion();
+//
+//                        quiz.getSession1().getBasicRemote().sendText(CurrentQuestion.QuestionText);
+//                        quiz.getSession2().getBasicRemote().sendText(CurrentQuestion.QuestionText);
+//                        quiz.getSession3().getBasicRemote().sendText(CurrentQuestion.QuestionText);
+//                        quiz.getSession4().getBasicRemote().sendText(CurrentQuestion.QuestionText);
+//                        quiz.getSession5().getBasicRemote().sendText(CurrentQuestion.QuestionText);
+//                        break;
+//                    case "EndRound":
+//                        quiz.getSession1().getBasicRemote().sendText(round.getSession1Awnser().getCorrect().toString() + ":" + quiz.getSession1points());
+//                        quiz.getSession2().getBasicRemote().sendText(round.getSession2Awnser().getCorrect().toString() + ":" + quiz.getSession2points());
+//                        quiz.getSession3().getBasicRemote().sendText(round.getSession3Awnser().getCorrect().toString() + ":" + quiz.getSession3points());
+//                        quiz.getSession4().getBasicRemote().sendText(round.getSession4Awnser().getCorrect().toString() + ":" + quiz.getSession4points());
+//                        quiz.getSession5().getBasicRemote().sendText(round.getSession5Awnser().getCorrect().toString() + ":" + quiz.getSession5points());
+//                        break;
+//                    case "EndQuiz":
+//                        quiz.getSession1().getBasicRemote().sendText("End of quiz");
+//                        quiz.getSession2().getBasicRemote().sendText("End of quiz");
+//                        quiz.getSession3().getBasicRemote().sendText("End of quiz");
+//                        quiz.getSession4().getBasicRemote().sendText("End of quiz");
+//                        quiz.getSession5().getBasicRemote().sendText("End of quiz");
+//                        break;
+//                    case "roomjoined":
+//                        if (quiz.getSession1() != null) {
+//                            quiz.getSession1().getBasicRemote().sendText("Joined quiz room waiting on more players");
+//                        }
+//                        if (quiz.getSession2() != null){
+//                            quiz.getSession2().getBasicRemote().sendText("Joined quiz room waiting on more players");
+//                        }
+//                        if (quiz.getSession3() != null) {
+//                            quiz.getSession3().getBasicRemote().sendText("Joined quiz room waiting on more players");
+//                        }
+//                        if (quiz.getSession4() != null){
+//                            quiz.getSession4().getBasicRemote().sendText("Joined quiz room waiting on more players");
+//                        }
+//                        break;
+//                }
+//            } catch (IOException e) {
+//                log.log(Level.SEVERE, (Supplier<String>) e);
+//            }
+          //  log.log(Level.INFO, "[End of Broadcast]");
     }
 }

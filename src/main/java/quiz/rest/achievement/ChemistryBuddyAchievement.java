@@ -33,14 +33,14 @@ public class ChemistryBuddyAchievement {
         }
     }
 
-    public boolean setPlayerAchievement(LinkAchievementDTO linkAchievementDTO) {
+    public boolean setPlayerAchievement(String userId, String achievementId) {
         try {
             Connection con = DriverManager.getConnection(dbURL, dbuser, dbpassword);
 
             String call = "{call set_player_achievement(?,?)}";
             try (CallableStatement stmt = con.prepareCall(call)) {
-                stmt.setInt(1, linkAchievementDTO.getUserid());
-                stmt.setInt(2, linkAchievementDTO.getAchievementid());
+                stmt.setInt(1, Integer.valueOf(userId));
+                stmt.setInt(2, Integer.valueOf(achievementId));
                 //ResultSet rs = stmt.executeQuery();
                 stmt.execute();
             }
@@ -50,20 +50,32 @@ public class ChemistryBuddyAchievement {
         }
     }
 
-    public boolean getAchievement(int achievementId) {
+    public String getAchievement(int achievementId) {
         try {
             Connection con = DriverManager.getConnection(dbURL, dbuser, dbpassword);
 
             String call = "{call get_achievement(?)}";
             try (CallableStatement stmt = con.prepareCall(call)) {
                 stmt.setInt(1, achievementId);
-                //ResultSet rs = stmt.executeQuery();
-                stmt.execute();
+
+                ResultSet rs = stmt.executeQuery();
+                boolean isEmpty = ! rs.first();
+                ResultSetMetaData metadata = rs.getMetaData();
+                int numColumns = metadata.getColumnCount();
+                JSONObject obj = new JSONObject();
+                if (!isEmpty) {
+                    for (int i = 1; i <= numColumns; ++i)
+                    {
+                        String column_name = metadata.getColumnName(i);
+                        obj.put(column_name, rs.getObject(column_name));
+                    }
+                    return obj.toJSONString();
+                }
             }
-            return true;
         } catch (Exception e) {
-            return false;
         }
+
+        return null;
     }
 
     public String getAllAchievements() {
@@ -101,7 +113,7 @@ public class ChemistryBuddyAchievement {
             Connection con = DriverManager.getConnection(dbURL, dbuser, dbpassword);
 
             JSONArray json = new JSONArray();
-            String call = "{call get_user_achievement(?)}";
+            String call = "{call get_user_achievements(?)}";
             try (CallableStatement stmt = con.prepareCall(call)) {
                 stmt.setInt(1, userId);
                 ResultSet rs = stmt.executeQuery();

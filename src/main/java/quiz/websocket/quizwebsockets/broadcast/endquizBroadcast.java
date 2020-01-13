@@ -2,9 +2,10 @@ package quiz.websocket.quizwebsockets.broadcast;
 
 import quiz.ServerLogger;
 import quiz.server.logic.QuizLogic;
-import quiz.websocket.questions.Question;
+import quiz.server.model.Player;
+import quiz.server.model.Question;
 import quiz.server.model.Quiz;
-import quiz.websocket.quizwebsockets.Round;
+import quiz.websocket.quizwebsockets.interfaces.iBroadcast;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -14,7 +15,6 @@ import java.util.logging.Logger;
 
 public class endquizBroadcast implements iBroadcast {
 
-    private Question CurrentQuestion;
     private static final String message = "End of quiz"; // Compliant
 
     @Override
@@ -26,18 +26,15 @@ public class endquizBroadcast implements iBroadcast {
         LogManager lgmngr = LogManager.getLogManager();
         Logger log = lgmngr.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-        Round round = new Round();
         log.log(Level.INFO,"[Broadcast] { " + s + " } to:");
 
         QuizLogic quizLogic = new QuizLogic();
-        CurrentQuestion = quizLogic.getRandomQuestion();
+        Question currentQuestion = quizLogic.getRandomQuestion();
 
         try {
-            quiz.getSession1().getBasicRemote().sendText(message);
-            quiz.getSession2().getBasicRemote().sendText(message);
-            quiz.getSession3().getBasicRemote().sendText(message);
-            quiz.getSession4().getBasicRemote().sendText(message);
-            quiz.getSession5().getBasicRemote().sendText(message);
+            for ( Player player : quiz.getPlayers()) {
+                quiz.getSession(player).getBasicRemote().sendText("End of quiz!");
+            }
         } catch (IOException e) {
             log.log(Level.SEVERE, (Supplier<String>) e);
         }

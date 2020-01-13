@@ -1,4 +1,4 @@
-package quiz.websocket.questions;
+package quiz.server.model;
 
 import java.util.Dictionary;
 import java.util.Hashtable;

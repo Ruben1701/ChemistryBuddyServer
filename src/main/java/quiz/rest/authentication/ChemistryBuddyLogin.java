@@ -1,6 +1,6 @@
 package quiz.rest.authentication;
 
-import quiz.rest.DTO.AccountDTO;
+import org.json.simple.JSONObject;
 import quiz.rest.DTO.LoginDTO;
 import quiz.rest.DTO.RegisterDTO;
 import quiz.rest.DbClass;
@@ -33,8 +33,7 @@ public class ChemistryBuddyLogin {
         }
     }
 
-    public boolean login(LoginDTO loginDTO){
-        //String procedure = "SELECT User_Email, User_Password FROM [dbo].[User] WHERE User_Email = ? AND User_Password = ?";
+    public String login(String email, String password){
         String call = "{call login_user(?,?)}";
 
 
@@ -47,17 +46,22 @@ public class ChemistryBuddyLogin {
         }
 
         try (CallableStatement stmt = Objects.requireNonNull(con).prepareCall(call)) {
-            stmt.setString(1, loginDTO.getUsername());
-            stmt.setString(2, loginDTO.getPassword());
+            stmt.setString(1, email);
+            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             boolean isEmpty = ! rs.first();
+            ResultSetMetaData metadata = rs.getMetaData();
+            int numColumns = metadata.getColumnCount();
+            JSONObject obj = new JSONObject();
             if (!isEmpty) {
-                return true;
+                String column_name = metadata.getColumnName(1);
+                obj.put(column_name, rs.getObject(column_name));
+                return obj.toJSONString();
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     public boolean doesAccountExist() {

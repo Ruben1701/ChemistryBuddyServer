@@ -1,6 +1,6 @@
 package quiz.server.interfaces;
 
-import quiz.websocket.questions.Question;
+import quiz.server.model.Question;
 
 public interface iQuiz {
     Question getRandomQuestion();

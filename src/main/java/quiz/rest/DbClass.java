@@ -33,7 +33,7 @@ public class DbClass {
 
     public CachedRowSet executeQuery(String procedure, Map map) throws SQLException {
         CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
-        ResultSet resultSet = null;
+        ResultSet resultSet;
         try{
             connection = DriverManager.getConnection(url);
             PreparedStatement statement = connection.prepareStatement(procedure);

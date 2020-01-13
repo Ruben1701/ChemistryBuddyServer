@@ -1,4 +1,4 @@
-package quiz.websocket.questions;
+package quiz.server.model;
 
 public class Question {
     public String QuestionText;

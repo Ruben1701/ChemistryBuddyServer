@@ -36,12 +36,12 @@ public ChemistryBuddyLoginRESTService() {
 
     @POST
     @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     //TODO wat is beter hele DTO mee geven of al naar String omzetten
-    public Response login(LoginDTO loginDTO){
-        if(chemistryBuddyLogin.login(loginDTO)){
-            return Response.status(200).entity(RESTResponseHelper.getSuccesResponse()).build();
+    public Response login(@FormParam(value = "Email") String email, @FormParam(value = "Password") String password){
+        if(chemistryBuddyLogin.login(email, password) != null){
+            return Response.ok(chemistryBuddyLogin.login(email, password)).build();
         }
         return Response.status(400).entity(RESTResponseHelper.getErrorResponseString()).build();
     }

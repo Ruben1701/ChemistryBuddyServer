@@ -1,8 +1,8 @@
 package quiz.server.logic;
 
 import quiz.server.interfaces.iQuiz;
-import quiz.websocket.questions.Question;
-import quiz.websocket.questions.QuestionDictionary;
+import quiz.server.model.Question;
+import quiz.server.model.QuestionDictionary;
 
 import java.util.Dictionary;
 

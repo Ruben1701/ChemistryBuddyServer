@@ -1,6 +1,6 @@
-package quiz.websocket.quizwebsockets;
+package quiz.server.model;
 
-import quiz.websocket.questions.Question;
+import quiz.server.model.Question;
 
 import javax.websocket.Session;
 
